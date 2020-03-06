@@ -79,6 +79,9 @@ void gui_btnm(void) {
   lv_obj_set_size(btnm, lv_obj_get_width(tab1)-20,
                   lv_obj_get_height(tab1)-60);
   lv_btnm_set_map(btnm, btnm_map);
+  lv_btnm_set_btn_ctrl(btnm, 1 , LV_BTNM_CTRL_TGL_ENABLE);
+  lv_btnm_set_btn_ctrl(btnm, 2 , LV_BTNM_CTRL_TGL_ENABLE);
+  lv_btnm_set_one_toggle(btnm, true);
   lv_obj_set_event_cb(btnm, btnm_action);
   g_sb_label = lv_label_create(tab1, NULL);
   lv_label_set_text(g_sb_label, "Please select Auton");
@@ -178,6 +181,58 @@ static void event_handler(lv_obj_t * obj, lv_event_t event)
   }
 }
 
+
+static lv_obj_t * label2;
+ 
+ 
+ 
+static void BttonEventCb(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {//点击事件
+        printf("Clicked\n");
+    }
+    else if(event == LV_EVENT_VALUE_CHANGED) {//开关切换事件
+        printf("Toggled\n");
+		if(lv_btn_get_state(obj) == LV_BTN_STATE_REL){
+			lv_label_set_text(label2, "OFF");
+		}else{
+			lv_label_set_text(label2, "ON");
+		}
+    }
+}	
+ 
+ 
+ 
+void DrawButton()
+{
+	//1. 按键1
+    lv_obj_t * btn1 = lv_btn_create(tab3, NULL);//在当前screen对象上创建btn1
+    lv_obj_set_event_cb(btn1, BttonEventCb);//设置当前按键的 事件回调函数
+    lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);//配置btn1在其父类（screen）中显示位置
+	
+	
+    lv_obj_t * label1;//创建按键1上面显示的label1
+    label1 = lv_label_create(btn1, NULL);//在父类btn1中创建label1实体
+    lv_label_set_text(label1, "Button");//配置label的text	
+ 
+	//2. 按键2
+    lv_obj_t * btn2 = lv_btn_create(tab3, NULL);
+    lv_obj_set_event_cb(btn2, BttonEventCb);
+    lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
+ 
+    lv_btn_set_toggle(btn2, true);	//使能其为开关按钮，非按键按钮，默认为释放状态
+	  lv_btn_toggle(btn2); //变为按下状态，每调用一次此函数，状态state会发生反转
+	  lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);//配置btn的自适应大小，其子对象都适应其高度
+ 
+	
+   
+    label2 = lv_label_create(btn2, NULL);
+    lv_label_set_text(label2, "Toggled");	
+ 
+ 
+ 
+}
+
 void lv_ex_tabview_1(void)
 {
     // lvgl theme
@@ -233,8 +288,10 @@ void lv_ex_tabview_1(void)
     gui_btnm();
     pid_btnm();
     gui_btn();
+    DrawButton();
 
 }
+
 
 
 /**
