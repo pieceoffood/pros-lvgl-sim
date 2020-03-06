@@ -24,7 +24,7 @@
 // credit to https://github.com/timeconfusing/v5gui with modify
 // credit to https://github.com/kunwarsahni01/Vex-Autonomous-Selector
 
-// forward declaration of following two objects
+// forward declaration of following objects
 // text to diplay motor and others
 lv_obj_t * debugtxt ;
 lv_obj_t * tabview ;
@@ -37,38 +37,42 @@ float kI=0.0;
 float kD=0.0;
 float kM=1.0;
 //typedef uint32_t lv_obj_user_data_t;
-lv_obj_user_data_t = uint32_t;
-uint32_t idbutton =1;
-uint32_t indexbutton=1;
-lv_obj_t * btn ;
-
-static void btnevent(lv_obj_t * obj, lv_event_t event)
-  {
-    if(event == LV_EVENT_CLICKED) {
-      uint32_t id = lv_obj_get_user_data(obj);
-      printf("%5s %d was pressed\n", "button", id );
-    }
+//lv_obj_user_data_t = uint32_t;
+//lv_obj_user_data_t idbutton;
+int  idbutton =99;
+static void btnevent(lv_obj_t * obj, lv_event_t event){
+  if(event == LV_EVENT_CLICKED) {
+    //(int *) id;
+    lv_obj_user_data_t id = lv_obj_get_user_data(obj);
+    printf("%5s %d was pressed\n", "button", (int*) id );
   }
+}
 
 void gui_btn(void) {
-  btn = lv_btn_create( tab3, NULL);
-  lv_obj_set_user_data(btn, 1);
+  lv_obj_t * btn = lv_btn_create( tab3, NULL);
+  lv_obj_set_user_data(btn, (int *) idbutton);
   lv_obj_set_event_cb(btn,  btnevent);
 }  
 
+/**
+ * call back function to select auton in button matrix
+ */
 static void btnm_action(lv_obj_t * btnm, lv_event_t event) {
   const char * btnmtxt ;
   int btnm_num=0;
   if(event == LV_EVENT_VALUE_CHANGED) {
     btnmtxt = lv_btnm_get_active_btn_text(btnm);
     btnm_num = lv_btnm_get_active_btn(btnm)+1;
-    printf("%5s was pressed button num %d\n", btnmtxt, btnm_num );
     lv_label_set_text(g_sb_label, btnmtxt);
     auton_sel = btnm_num;
+    printf("%5s was pressed button num %d\n", btnmtxt, btnm_num );
   }
   lv_obj_align(g_sb_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
 }
 
+/**
+ * use button matrix create auton selection menu
+ */
 void gui_btnm(void) {
   // Create a button descriptor string array w/ no repeat "\224"
   static const char * btnm_map[] = { "\2241 red big", "\2242 red small", "\2243 blue big", "\n",
@@ -88,6 +92,10 @@ void gui_btnm(void) {
   lv_obj_align(g_sb_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20); // must be after set_text
 }
 
+
+/**
+ * call back funtion for button matrix to tune PID
+ */
 static void pidbtnm_action(lv_obj_t * btnm, lv_event_t event) {
   char pidtext[100];
   const char * btnmtxt;
@@ -136,7 +144,9 @@ static void pidbtnm_action(lv_obj_t * btnm, lv_event_t event) {
   lv_obj_align(pid_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
 }
 
-
+/**
+ * use button matrix create auton selection menu
+ */
 void pid_btnm(void) {
   // Create a button descriptor string array w/ no repeat "\224"
   //gui_btnm();
@@ -206,7 +216,7 @@ static void BttonEventCb(lv_obj_t * obj, lv_event_t event)
 void DrawButton()
 {
 	//1. 按键1
-    lv_obj_t * btn1 = lv_btn_create(tab3, NULL);//在当前screen对象上创建btn1
+    lv_obj_t * btn1 = lv_btn_create(tab2, NULL);//在当前screen对象上创建btn1
     lv_obj_set_event_cb(btn1, BttonEventCb);//设置当前按键的 事件回调函数
     lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);//配置btn1在其父类（screen）中显示位置
 	
@@ -216,7 +226,7 @@ void DrawButton()
     lv_label_set_text(label1, "Button");//配置label的text	
  
 	//2. 按键2
-    lv_obj_t * btn2 = lv_btn_create(tab3, NULL);
+    lv_obj_t * btn2 = lv_btn_create(tab2, NULL);
     lv_obj_set_event_cb(btn2, BttonEventCb);
     lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
  
