@@ -36,55 +36,41 @@ float kP=0.0;
 float kI=0.0;
 float kD=0.0;
 float kM=1.0;
+//typedef uint32_t lv_obj_user_data_t;
+lv_obj_user_data_t = uint32_t;
+uint32_t idbutton =1;
+uint32_t indexbutton=1;
+lv_obj_t * btn ;
 
+static void btnevent(lv_obj_t * obj, lv_event_t event)
+  {
+    if(event == LV_EVENT_CLICKED) {
+      uint32_t id = lv_obj_get_user_data(obj);
+      printf("%5s %d was pressed\n", "button", id );
+    }
+  }
+
+void gui_btn(void) {
+  btn = lv_btn_create( tab3, NULL);
+  lv_obj_set_user_data(btn, 1);
+  lv_obj_set_event_cb(btn,  btnevent);
+}  
 
 static void btnm_action(lv_obj_t * btnm, lv_event_t event) {
   const char * btnmtxt ;
-  		
-
-    lv_obj_set_style(g_sb_label, &lv_style_pretty_color);
   int btnm_num=0;
   if(event == LV_EVENT_VALUE_CHANGED) {
-        btnmtxt = lv_btnm_get_active_btn_text(btnm);
-        btnm_num = lv_btnm_get_active_btn(btnm)+1;
-        printf("%5s was pressed button num %d\n", btnmtxt, btnm_num );
-  
+    btnmtxt = lv_btnm_get_active_btn_text(btnm);
+    btnm_num = lv_btnm_get_active_btn(btnm)+1;
+    printf("%5s was pressed button num %d\n", btnmtxt, btnm_num );
+    lv_label_set_text(g_sb_label, btnmtxt);
+    auton_sel = btnm_num;
   }
-
-  switch (btnm_num) {
-  case 1:
-    lv_label_set_text(g_sb_label, "Red Big Auton");
-    auton_sel = 1;
-    break;
-  case 2:
-    lv_label_set_text(g_sb_label, "Red Small Auton");
-    auton_sel = 2;
-    break;
-  case 3:
-    lv_label_set_text(g_sb_label, "Blue Big Auton");
-    auton_sel = 3;
-break;
-  case 4:
-    lv_label_set_text(g_sb_label, "Blue Small Auton");
-    auton_sel = 4;
-break;
-  case 5:
-    lv_label_set_text(g_sb_label, "Skills Auton1");
-    auton_sel = 5;
-break;
-  case 6:
-    lv_label_set_text(g_sb_label, "Skills Auton2");
-    auton_sel = 6;
-break;
-  }
-  
   lv_obj_align(g_sb_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
-
 }
 
 void gui_btnm(void) {
   // Create a button descriptor string array w/ no repeat "\224"
-  //gui_btnm();
   static const char * btnm_map[] = { "\2241 red big", "\2242 red small", "\2243 blue big", "\n",
                                      "\2244 blue big", "\2245 Skill 1", "\2246 Skill 2", "" };
   //The escape section prevents a press of the button being interpreted as a multipress of the button
@@ -108,9 +94,7 @@ static void pidbtnm_action(lv_obj_t * btnm, lv_event_t event) {
         btnmtxt = lv_btnm_get_active_btn_text(btnm);
 
         printf("button %s button %d was pressed kP %8.2f  kI %8.2f kD %8.2f kM %8.2f \n",  btnmtxt, btnm_num, kP, kI, kD, kM);
-    
-    
-  
+   
   switch (btnm_num) {
   case 1:
     kP += kM;
@@ -120,7 +104,6 @@ static void pidbtnm_action(lv_obj_t * btnm, lv_event_t event) {
     break;
   case 2:
     kI += kM;
-
     break;
   case 6:
     kI -= kM;
@@ -168,12 +151,31 @@ void pid_btnm(void) {
 
 static void event_handler(lv_obj_t * obj, lv_event_t event)
 {
-    if(event == LV_EVENT_CLICKED) {
-        printf("Clicked\n");
-    }
-    else if(event == LV_EVENT_VALUE_CHANGED) {
-        printf("Toggled\n");
-    }
+  switch(event) {
+    case LV_EVENT_PRESSED:
+      printf("Pressed\n");
+      break;
+
+    case LV_EVENT_SHORT_CLICKED:
+      printf("Short clicked\n");
+      break;
+
+    case LV_EVENT_CLICKED:
+      printf("Clicked\n");
+      break;
+
+    case LV_EVENT_LONG_PRESSED:
+      printf("Long press\n");
+      break;
+
+    case LV_EVENT_LONG_PRESSED_REPEAT:
+      printf("Long press repeat\n");
+      break;
+
+    case LV_EVENT_RELEASED:
+      printf("Released\n");
+      break;
+  }
 }
 
 void lv_ex_tabview_1(void)
@@ -230,6 +232,7 @@ void lv_ex_tabview_1(void)
 
     gui_btnm();
     pid_btnm();
+    gui_btn();
 
 }
 
