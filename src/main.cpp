@@ -36,14 +36,10 @@ float kP=0.0;
 float kI=0.0;
 float kD=0.0;
 float kM=1.0;
-//typedef uint32_t lv_obj_user_data_t;
-//lv_obj_user_data_t = uint32_t;
-//lv_obj_user_data_t idbutton;
-int  idbutton =1;
+
 static void btnevent(lv_obj_t * obj, lv_event_t event){
   if(event == LV_EVENT_CLICKED) {
     int id=9;
-    // ((char*)DataPtr)
     id = (int ) lv_obj_get_user_data(obj);
     printf("%5s %d was pressed\n", "button", id );
   }
@@ -51,9 +47,17 @@ static void btnevent(lv_obj_t * obj, lv_event_t event){
 
 void gui_btn(void) {
   lv_obj_t * btn = lv_btn_create( tab3, NULL);
-  lv_obj_set_user_data(btn,  (int *) idbutton);
+  lv_obj_set_user_data(btn,  (lv_obj_user_data_t) 70);
   lv_obj_set_event_cb(btn,  btnevent);
 }  
+
+/*
+void gui_btn(void) {
+  lv_obj_t * btn = lv_btn_create( tab3, NULL);
+  lv_obj_set_user_data(btn,  (int *) buttonid);
+  lv_obj_set_event_cb(btn,  btnevent);
+}  
+*/
 
 /**
  * call back function to select auton in button matrix
@@ -102,44 +106,44 @@ static void pidbtnm_action(lv_obj_t * btnm, lv_event_t event) {
   const char * btnmtxt;
   static int btnm_num =0 ;
     if(event == LV_EVENT_VALUE_CHANGED) {
-        btnm_num = lv_btnm_get_active_btn(btnm)+1;
-        btnmtxt = lv_btnm_get_active_btn_text(btnm);
+      btnm_num = lv_btnm_get_active_btn(btnm)+1;
+      btnmtxt = lv_btnm_get_active_btn_text(btnm);
 
-        printf("button %s button %d was pressed kP %8.2f  kI %8.2f kD %8.2f kM %8.2f \n",  btnmtxt, btnm_num, kP, kI, kD, kM);
-   
-  switch (btnm_num) {
-  case 1:
-    kP += kM;
-    break;
-  case 5:
-    kP -= kM;
-    break;
-  case 2:
-    kI += kM;
-    break;
-  case 6:
-    kI -= kM;
-    break;
-  case 3:
-    kD += kM;
-  break;
-  case 7:
-    kD -= kM;
-   break;
-   case 4:
-    kM = kM*10;
-   break;
-   case 8:
-    kM = kM/10;
-   break;
-  }
-  kP = (kP >= 0 ? kP : 0);
-  kI = (kI >= 0 ? kI : 0);
-  kD = (kD >= 0 ? kD : 0);
-  sprintf(pidtext, "kP %3.5f kI %3.5f  kD %3.5f  kM %4.5f  ",
-              kP, kI, kD, kM
-  );
-  lv_label_set_text(pid_label, pidtext);
+      switch (btnm_num) {
+        case 1:
+        kP += kM;
+        break;
+        case 5:
+        kP -= kM;
+        break;
+        case 2:
+        kI += kM;
+        break;
+        case 6:
+        kI -= kM;
+        break;
+        case 3:
+        kD += kM;
+        break;
+        case 7:
+        kD -= kM;
+        break;
+        case 4:
+        kM = kM*10;
+        break;
+        case 8:
+        kM = kM/10;
+        break;
+      }
+      // force kP kI kD be non-negative
+      kP = (kP >= 0 ? kP : 0);
+      kI = (kI >= 0 ? kI : 0);
+      kD = (kD >= 0 ? kD : 0);
+      printf("button %s button %d was pressed kP %8.2f  kI %8.2f kD %8.2f kM %8.2f \n",  btnmtxt, btnm_num, kP, kI, kD, kM);
+      sprintf(pidtext, "kP %3.5f kI %3.5f  kD %3.5f  kM %4.5f  ",
+                kP, kI, kD, kM
+      );
+      lv_label_set_text(pid_label, pidtext);
     }
   // must be after set_text
   lv_obj_align(pid_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
@@ -158,7 +162,7 @@ void pid_btnm(void) {
   // Create a default button matrix* no repeat
   lv_obj_t *btnm = lv_btnm_create(tab4, NULL);
   lv_obj_set_size(btnm, lv_obj_get_width(tab1)-30,
-      lv_obj_get_height(tab1)-60);
+                        lv_obj_get_height(tab1)-60);
   lv_btnm_set_map(btnm, btnm_map);
   lv_obj_set_event_cb(btnm, pidbtnm_action);
 }
@@ -192,10 +196,7 @@ static void event_handler(lv_obj_t * obj, lv_event_t event)
   }
 }
 
-
 static lv_obj_t * label2;
- 
- 
  
 static void BttonEventCb(lv_obj_t * obj, lv_event_t event)
 {
@@ -212,94 +213,88 @@ static void BttonEventCb(lv_obj_t * obj, lv_event_t event)
     }
 }	
  
- 
- 
 void DrawButton()
 {
 	//1. 按键1
-    lv_obj_t * btn1 = lv_btn_create(tab2, NULL);//在当前screen对象上创建btn1
-    lv_obj_set_event_cb(btn1, BttonEventCb);//设置当前按键的 事件回调函数
-    lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);//配置btn1在其父类（screen）中显示位置
+  lv_obj_t * btn1 = lv_btn_create(tab2, NULL);//在当前screen对象上创建btn1
+  lv_obj_set_event_cb(btn1, BttonEventCb);//设置当前按键的 事件回调函数
+  lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);//配置btn1在其父类（screen）中显示位置
 	
 	
-    lv_obj_t * label1;//创建按键1上面显示的label1
-    label1 = lv_label_create(btn1, NULL);//在父类btn1中创建label1实体
-    lv_label_set_text(label1, "Button");//配置label的text	
+  lv_obj_t * label1;//创建按键1上面显示的label1
+  label1 = lv_label_create(btn1, NULL);//在父类btn1中创建label1实体
+  lv_label_set_text(label1, "Button");//配置label的text	
  
 	//2. 按键2
-    lv_obj_t * btn2 = lv_btn_create(tab2, NULL);
-    lv_obj_set_event_cb(btn2, BttonEventCb);
-    lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
+  lv_obj_t * btn2 = lv_btn_create(tab2, NULL);
+  lv_obj_set_event_cb(btn2, BttonEventCb);
+  lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
+
+  lv_btn_set_toggle(btn2, true);	//使能其为开关按钮，非按键按钮，默认为释放状态
+  lv_btn_toggle(btn2); //变为按下状态，每调用一次此函数，状态state会发生反转
+  lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);//配置btn的自适应大小，其子对象都适应其高度
  
-    lv_btn_set_toggle(btn2, true);	//使能其为开关按钮，非按键按钮，默认为释放状态
-	  lv_btn_toggle(btn2); //变为按下状态，每调用一次此函数，状态state会发生反转
-	  lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);//配置btn的自适应大小，其子对象都适应其高度
- 
-	
-   
-    label2 = lv_label_create(btn2, NULL);
-    lv_label_set_text(label2, "Toggled");	
- 
- 
+  label2 = lv_label_create(btn2, NULL);
+  lv_label_set_text(label2, "Toggled");	
  
 }
 
 void lv_ex_tabview_1(void)
 {
-    // lvgl theme
-    lv_theme_t *th = lv_theme_night_init(240, NULL); //Set a HUE 240 value and keep font default BLUE
-    //Set a HUE 360 value and keep font default RED
-    lv_theme_set_current(th);
-    //th = lv_theme_get_current();
-    /*Create a Tab view object*/
+  // lvgl theme
+  lv_theme_t *th = lv_theme_night_init(240, NULL); //Set a HUE 240 value and keep font default BLUE
+  //Set a HUE 360 value and keep font default RED
+  lv_theme_set_current(th);
+  //th = lv_theme_get_current();
+  /*Create a Tab view object*/
 
 
-    tabview = lv_tabview_create(lv_scr_act(), NULL);
-		lv_tabview_set_sliding(tabview, false);
+  tabview = lv_tabview_create(lv_scr_act(), NULL);
+  lv_tabview_set_sliding(tabview, false);
 
-    /*Add 4 tabs (the tabs are page (lv_page) and can be scrolled*/
-		tab1 = lv_tabview_add_tab(tabview, "Select");
-    tab2 = lv_tabview_add_tab(tabview, "Auto");
-    tab3 = lv_tabview_add_tab(tabview, "Driver");
-    tab4 = lv_tabview_add_tab(tabview, "PID");
+  /*Add 4 tabs (the tabs are page (lv_page) and can be scrolled*/
+  tab1 = lv_tabview_add_tab(tabview, "Select");
+  tab2 = lv_tabview_add_tab(tabview, "Auto");
+  tab3 = lv_tabview_add_tab(tabview, "Driver");
+  tab4 = lv_tabview_add_tab(tabview, "PID");
 
-    lv_tabview_set_tab_act(tabview, 0 , LV_ANIM_OFF);
-
-
-
-
-    /*Add content to the tabs*/
-    //label = lv_label_create(tab1, NULL);
-    //lv_label_set_text(label, "select your autonomous");
-    //lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+  lv_tabview_set_tab_act(tabview, 0 , LV_ANIM_OFF);
 
 
 
 
-    debuglabel = lv_label_create(tab2, NULL);
-    lv_label_set_text(debuglabel, "auto debug");
-    debugpid = lv_label_create(tab2, NULL);
-    lv_obj_align(debugpid, debuglabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 80);
-
-    debugtxt = lv_label_create(tab3, NULL);
-
-    lv_label_set_long_mode(debugtxt, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
-    lv_label_set_recolor(debugtxt, true);                      /*Enable re-coloring by commands in the text*/
-    lv_label_set_align(debugtxt, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
-    lv_label_set_text(debugtxt, NULL);
-    lv_obj_set_width(debugtxt, 500);                           /*Set a width*/
-    lv_obj_align(debugtxt, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 20);      /*Align to center*/
+  /*Add content to the tabs*/
+  //label = lv_label_create(tab1, NULL);
+  //lv_label_set_text(label, "select your autonomous");
+  //lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
 
 
-    pid_label = lv_label_create(tab4, NULL);
-		lv_obj_set_style(pid_label, &lv_style_pretty_color);
-    lv_label_set_text(pid_label, "PID tuning");
-    lv_obj_align(pid_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
 
-    gui_btnm();
-    pid_btnm();
-    gui_btn();
-    DrawButton();
+
+  debuglabel = lv_label_create(tab2, NULL);
+  lv_label_set_text(debuglabel, "auto debug");
+  debugpid = lv_label_create(tab2, NULL);
+  lv_obj_align(debugpid, debuglabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 80);
+
+  debugtxt = lv_label_create(tab3, NULL);
+
+  lv_label_set_long_mode(debugtxt, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
+  lv_label_set_recolor(debugtxt, true);                      /*Enable re-coloring by commands in the text*/
+  lv_label_set_align(debugtxt, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
+  lv_label_set_text(debugtxt, NULL);
+  lv_obj_set_width(debugtxt, 500);                           /*Set a width*/
+  lv_obj_align(debugtxt, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 20);      /*Align to center*/
+
+
+  pid_label = lv_label_create(tab4, NULL);
+  lv_obj_set_style(pid_label, &lv_style_pretty_color);
+  lv_label_set_text(pid_label, "PID tuning");
+  lv_obj_align(pid_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
+
+  gui_btnm();
+  pid_btnm();
+  gui_btn();
+  DrawButton();
 
 }
 
