@@ -49,6 +49,10 @@ void gui_btn(void) {
   lv_obj_t * btn = lv_btn_create( tab3, NULL);
   lv_obj_set_user_data(btn,  (lv_obj_user_data_t) 70);
   lv_obj_set_event_cb(btn,  btnevent);
+
+  lv_obj_t * label1;//declare label1 for btn1
+  label1 = lv_label_create(btn, NULL);//initiate label1
+  lv_label_set_text(label1, "Press");
 }  
 
 /*
@@ -201,10 +205,10 @@ static lv_obj_t * label2;
 static void BttonEventCb(lv_obj_t * obj, lv_event_t event)
 {
     if(event == LV_EVENT_CLICKED) {
-        printf("Clicked\n");
+      printf("button %d was Clicked\n", (int ) lv_obj_get_user_data(obj) );
     }
     else if(event == LV_EVENT_VALUE_CHANGED) {
-        printf("Toggled\n");
+      printf("Toggled\n");
 		if(lv_btn_get_state(obj) == LV_BTN_STATE_REL){
 			lv_label_set_text(label2, "OFF");
 		}else{
@@ -219,16 +223,17 @@ void DrawButton()
   lv_obj_t * btn1 = lv_btn_create(tab2, NULL);// create btn1 in current screen
   lv_obj_set_event_cb(btn1, BttonEventCb);//set callback function
   lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);
-	
+  lv_obj_set_user_data(btn1,  (lv_obj_user_data_t) 1);
 	
   lv_obj_t * label1;//declare label1 for btn1
   label1 = lv_label_create(btn1, NULL);//initiate label1
   lv_label_set_text(label1, "Button");
  
-	//2. btn 2
+	//2. button 2
   lv_obj_t * btn2 = lv_btn_create(tab2, NULL);
   lv_obj_set_event_cb(btn2, BttonEventCb);
   lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
+  lv_obj_set_user_data(btn2,  (lv_obj_user_data_t) 2);
 
   lv_btn_set_toggle(btn2, true);	//set to on/off button，default is release
   lv_btn_toggle(btn2); //set to toggle (on)
