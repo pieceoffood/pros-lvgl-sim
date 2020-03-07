@@ -250,6 +250,14 @@ void DrawButton()
  
 }
 
+void odometer() {
+  /*Set the values*/
+  lv_gauge_set_value(gauge1, 0, fabs(left_front.get_actual_velocity()));
+  lv_gauge_set_value(gauge1, 1, fabs(right_front.get_actual_velocity()));
+  lv_gauge_set_value(gauge1, 2, fabs(left_back.get_actual_velocity()));
+  lv_gauge_set_value(gauge1, 3, fabs(right_back.get_actual_velocity()));
+}
+
 void lv_ex_gauge_1(void)
 {
     /*Create a style*/
@@ -266,23 +274,26 @@ void lv_ex_gauge_1(void)
     style.line.color = LV_COLOR_RED;                  /*Line color after the critical value*/
 
     /*Describe the color for the needles*/
-    static lv_color_t needle_colors[3];
+    static lv_color_t needle_colors[4];
     needle_colors[0] = LV_COLOR_BLUE;
     needle_colors[1] = LV_COLOR_ORANGE;
     needle_colors[2] = LV_COLOR_PURPLE;
+    needle_colors[3] = LV_COLOR_WHITE;
 
     /*Create a gauge*/
-    lv_obj_t * gauge1 = lv_gauge_create(tab5, NULL);
+    gauge1 = lv_gauge_create(tab5, NULL);
     lv_gauge_set_style(gauge1, LV_GAUGE_STYLE_MAIN, &style);
     lv_gauge_set_range(gauge1, 0, 200);
-    lv_gauge_set_needle_count(gauge1, 3, needle_colors);
+    lv_gauge_set_critical_value(gauge1, 160);
+    lv_gauge_set_needle_count(gauge1, 4, needle_colors);
     lv_obj_set_size(gauge1, 150, 150);
     lv_obj_align(gauge1, NULL, LV_ALIGN_CENTER, 0, 20);
 
     /*Set the values*/
-    lv_gauge_set_value(gauge1, 0, left_back.get_actual_velocity());
+    lv_gauge_set_value(gauge1, 0, 10);
     lv_gauge_set_value(gauge1, 1, 20);
     lv_gauge_set_value(gauge1, 2, 130);
+    lv_gauge_set_value(gauge1, 3, 150);
 }
 
 
