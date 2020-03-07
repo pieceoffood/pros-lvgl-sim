@@ -15,6 +15,7 @@ static lv_obj_t * tab1;
 static lv_obj_t * tab2;
 static lv_obj_t * tab3;
 static lv_obj_t * tab4;
+static lv_obj_t * tab5;
 static lv_obj_t * g_sb_label;  // sb text label
 extern lv_obj_t * debuglabel;
 static lv_obj_t * pid_label;

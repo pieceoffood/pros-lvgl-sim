@@ -41,7 +41,7 @@ static void btnevent(lv_obj_t * obj, lv_event_t event){
   if(event == LV_EVENT_CLICKED) {
     int id=9;
     id = (int ) lv_obj_get_user_data(obj);
-    printf("%5s %d was pressed\n", "button", id );
+    printf("%s %d was pressed\n", "button", id );
   }
 }
 
@@ -61,6 +61,11 @@ void gui_btn(void) {
   lv_obj_t * btn = lv_btn_create( tab3, NULL);
   lv_obj_set_user_data(btn,  (int *) buttonid);
   lv_obj_set_event_cb(btn,  btnevent);
+  lv_btn_set_fit2(btn, LV_FIT_TIGHT, LV_FIT_TIGHT);
+
+  lv_obj_t * label1;//declare label1 for btn1
+  label1 = lv_label_create(btn, NULL);//initiate label1
+  lv_label_set_text(label1, "Press");
 }  
 */
 
@@ -75,7 +80,7 @@ static void btnm_action(lv_obj_t * btnm, lv_event_t event) {
     btnm_num = lv_btnm_get_active_btn(btnm)+1;
     lv_label_set_text(g_sb_label, btnmtxt);
     auton_sel = btnm_num;
-    printf("%5s was pressed button num %d\n", btnmtxt, btnm_num );
+    printf("%s was pressed button num %d\n", btnmtxt, btnm_num );
   }
   lv_obj_align(g_sb_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
 }
@@ -85,8 +90,8 @@ static void btnm_action(lv_obj_t * btnm, lv_event_t event) {
  */
 void gui_btnm(void) {
   // Create a button descriptor string array w/ no repeat "\224"
-  static const char * btnm_map[] = { "\2241 red big", "\2242 red small", "\2243 blue big", "\n",
-                                     "\2244 blue big", "\2245 Skill 1", "\2246 Skill 2", "" };
+  static const char * btnm_map[] = { "\2241 red big", "\2242 red small", "\2243 blue big", "\2244 blue small", "\n",
+                                     "\2245 Skill 1", "\2246 Skill 2", "\2247 Skill 3", "" };
   //The escape section prevents a press of the button being interpreted as a multipress of the button
   // Create a default button matrix* no repeat
   lv_obj_t *btnm = lv_btnm_create(tab1, NULL);
@@ -245,6 +250,42 @@ void DrawButton()
  
 }
 
+void lv_ex_gauge_1(void)
+{
+    /*Create a style*/
+    static lv_style_t style;
+    lv_style_copy(&style, &lv_style_pretty_color);
+    style.body.main_color = lv_color_hex3(0x666);     /*Line color at the beginning*/
+    style.body.grad_color =  lv_color_hex3(0x666);    /*Line color at the end*/
+    style.body.padding.left = 10;                      /*Scale line length*/
+    style.body.padding.inner = 8 ;                    /*Scale label padding*/
+    style.body.border.color = lv_color_hex3(0x333);   /*Needle middle circle color*/
+    style.line.width = 3;
+    // style.text.color = lv_color_hex3(0x333);
+    style.text.color = LV_COLOR_WHITE;
+    style.line.color = LV_COLOR_RED;                  /*Line color after the critical value*/
+
+    /*Describe the color for the needles*/
+    static lv_color_t needle_colors[3];
+    needle_colors[0] = LV_COLOR_BLUE;
+    needle_colors[1] = LV_COLOR_ORANGE;
+    needle_colors[2] = LV_COLOR_PURPLE;
+
+    /*Create a gauge*/
+    lv_obj_t * gauge1 = lv_gauge_create(tab5, NULL);
+    lv_gauge_set_style(gauge1, LV_GAUGE_STYLE_MAIN, &style);
+    lv_gauge_set_range(gauge1, 0, 200);
+    lv_gauge_set_needle_count(gauge1, 3, needle_colors);
+    lv_obj_set_size(gauge1, 150, 150);
+    lv_obj_align(gauge1, NULL, LV_ALIGN_CENTER, 0, 20);
+
+    /*Set the values*/
+    lv_gauge_set_value(gauge1, 0, left_back.get_actual_velocity());
+    lv_gauge_set_value(gauge1, 1, 20);
+    lv_gauge_set_value(gauge1, 2, 130);
+}
+
+
 void lv_ex_tabview_1(void)
 {
   // lvgl theme
@@ -263,6 +304,7 @@ void lv_ex_tabview_1(void)
   tab2 = lv_tabview_add_tab(tabview, "Auto");
   tab3 = lv_tabview_add_tab(tabview, "Driver");
   tab4 = lv_tabview_add_tab(tabview, "PID");
+  tab5 = lv_tabview_add_tab(tabview, "Odometer");
 
   lv_tabview_set_tab_act(tabview, 0 , LV_ANIM_OFF);
 
@@ -301,6 +343,7 @@ void lv_ex_tabview_1(void)
   pid_btnm();
   gui_btn();
   DrawButton();
+  lv_ex_gauge_1();
 
 }
 

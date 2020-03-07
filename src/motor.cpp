@@ -1,4 +1,5 @@
 #include "main.h"
+using namespace pros;
 
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
