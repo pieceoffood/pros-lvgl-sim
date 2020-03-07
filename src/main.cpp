@@ -49,6 +49,7 @@ void gui_btn(void) {
   lv_obj_t * btn = lv_btn_create( tab3, NULL);
   lv_obj_set_user_data(btn,  (lv_obj_user_data_t) 70);
   lv_obj_set_event_cb(btn,  btnevent);
+  lv_btn_set_fit2(btn, LV_FIT_TIGHT, LV_FIT_TIGHT);
 
   lv_obj_t * label1;//declare label1 for btn1
   label1 = lv_label_create(btn, NULL);//initiate label1
