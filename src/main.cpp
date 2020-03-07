@@ -39,18 +39,19 @@ float kM=1.0;
 //typedef uint32_t lv_obj_user_data_t;
 //lv_obj_user_data_t = uint32_t;
 //lv_obj_user_data_t idbutton;
-int  idbutton =99;
+int  idbutton =1;
 static void btnevent(lv_obj_t * obj, lv_event_t event){
   if(event == LV_EVENT_CLICKED) {
-    //(int *) id;
-    lv_obj_user_data_t id = lv_obj_get_user_data(obj);
-    printf("%5s %d was pressed\n", "button", (int*) id );
+    int id=9;
+    // ((char*)DataPtr)
+    id = (int ) lv_obj_get_user_data(obj);
+    printf("%5s %d was pressed\n", "button", id );
   }
 }
 
 void gui_btn(void) {
   lv_obj_t * btn = lv_btn_create( tab3, NULL);
-  lv_obj_set_user_data(btn, (int *) idbutton);
+  lv_obj_set_user_data(btn,  (int *) idbutton);
   lv_obj_set_event_cb(btn,  btnevent);
 }  
 
