@@ -84,13 +84,16 @@ void gui_btn(void) {
  */
 static void btnm_action(lv_obj_t * btnm, lv_event_t event) {
   const char * btnmtxt ;
+    
   int btnm_num=0;
   if(event == LV_EVENT_VALUE_CHANGED) {
+    uint16_t id = lv_btnm_get_active_btn(btnm);    
     btnmtxt = lv_btnm_get_active_btn_text(btnm);
     btnm_num = lv_btnm_get_active_btn(btnm)+1;
+    lv_btnm_clear_btn_ctrl_all(btnm,LV_BTNM_CTRL_TGL_STATE); // void the second click. btn will still be toggoled
     lv_label_set_text(g_sb_label, btnmtxt);
     auton_sel = btnm_num;
-    printf("%s was pressed button num %d\n", btnmtxt, btnm_num );
+    printf("%s was pressed button num %d\n", btnmtxt, btnm_num);
   }
   lv_obj_align(g_sb_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
 }
@@ -109,7 +112,6 @@ void gui_btnm(void) {
                   lv_obj_get_height(tab1)-60);
   lv_btnm_set_map(btnm, btnm_map);
   lv_btnm_set_btn_ctrl_all(btnm, LV_BTNM_CTRL_TGL_ENABLE);
-  lv_btnm_set_btn_ctrl(btnm, 2 , LV_BTNM_CTRL_TGL_ENABLE);
   lv_btnm_set_one_toggle(btnm, true);
   lv_obj_set_event_cb(btnm, btnm_action);
   g_sb_label = lv_label_create(tab1, NULL);
