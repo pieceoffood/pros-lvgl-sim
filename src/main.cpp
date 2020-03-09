@@ -26,9 +26,10 @@
 
 // forward declaration of following objects
 // text to diplay motor and others
-lv_obj_t * debugtxt ;
+
+lv_obj_t * debugdrive ;
 lv_obj_t * tabview ;
-lv_obj_t * debuglabel ;
+lv_obj_t * debugauto ;
 lv_obj_t * debugpid;
 
 int auton_sel = 0;
@@ -37,6 +38,10 @@ float kI=0.0;
 float kD=0.0;
 float kM=1.0;
 
+/**
+ * call back function for btn
+ * get button ID assigned by user
+ */
 static void btnevent(lv_obj_t * obj, lv_event_t event){
   if(event == LV_EVENT_CLICKED) {
     int id=9;
@@ -45,8 +50,13 @@ static void btnevent(lv_obj_t * obj, lv_event_t event){
   }
 }
 
+/**
+ * create btn
+ * get it's number assigned by use with call-back function
+ */
 void gui_btn(void) {
-  lv_obj_t * btn = lv_btn_create( tab3, NULL);
+  lv_obj_t * btn = lv_btn_create( tab5, NULL);
+  lv_obj_align(btn, NULL, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_user_data(btn,  (lv_obj_user_data_t) 70);
   lv_obj_set_event_cb(btn,  btnevent);
   lv_btn_set_fit2(btn, LV_FIT_TIGHT, LV_FIT_TIGHT);
@@ -177,6 +187,7 @@ void pid_btnm(void) {
   lv_obj_set_event_cb(btnm, pidbtnm_action);
 }
 
+
 static void event_handler(lv_obj_t * obj, lv_event_t event)
 {
   switch(event) {
@@ -211,34 +222,40 @@ static lv_obj_t * label2;
 static void BttonEventCb(lv_obj_t * obj, lv_event_t event)
 {
     if(event == LV_EVENT_CLICKED) {
+      int id;
+      id = (int ) lv_obj_get_user_data(obj);
       printf("button %d was Clicked\n", (int ) lv_obj_get_user_data(obj) );
     }
     else if(event == LV_EVENT_VALUE_CHANGED) {
       printf("Toggled\n");
 		if(lv_btn_get_state(obj) == LV_BTN_STATE_REL){
-			lv_label_set_text(label2, "OFF");
+			lv_label_set_text(label2, "Toggoled\n#ff0000 OFF#");
 		}else{
-			lv_label_set_text(label2, "ON");
+			lv_label_set_text(label2, "Toggoled\n#00ff00 ON#");
 		}
     }
 }	
  
+/**
+ * draw a button example
+ */ 
 void DrawButton()
 {
 	//1.  button 1
-  lv_obj_t * btn1 = lv_btn_create(tab2, NULL);// create btn1 in current screen
+  lv_obj_t * btn1 = lv_btn_create(tab5, NULL);// create btn1 in current screen
   lv_obj_set_event_cb(btn1, BttonEventCb);//set callback function
-  lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, 0, -40);
+  lv_obj_align(btn1, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
   lv_obj_set_user_data(btn1,  (lv_obj_user_data_t) 1);
 	
   lv_obj_t * label1;//declare label1 for btn1
   label1 = lv_label_create(btn1, NULL);//initiate label1
-  lv_label_set_text(label1, "Button");
+  lv_label_set_recolor(label1, true); 
+  lv_label_set_text(label1, "#0000ff Blue Button#");
  
 	//2. button 2
-  lv_obj_t * btn2 = lv_btn_create(tab2, NULL);
+  lv_obj_t * btn2 = lv_btn_create(tab5, NULL);
   lv_obj_set_event_cb(btn2, BttonEventCb);
-  lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 0, 40);
+  lv_obj_align(btn2, NULL, LV_ALIGN_IN_LEFT_MID, 0, 40);
   lv_obj_set_user_data(btn2,  (lv_obj_user_data_t) 2);
 
   lv_btn_set_toggle(btn2, true);	//set to on/off button，default is release
@@ -246,10 +263,15 @@ void DrawButton()
   lv_btn_set_fit2(btn2, LV_FIT_NONE, LV_FIT_TIGHT);
  
   label2 = lv_label_create(btn2, NULL);
+  lv_label_set_recolor(label2, true);  
+  lv_label_set_align(label2, LV_LABEL_ALIGN_CENTER);
   lv_label_set_text(label2, "Toggled");	
  
 }
 
+/**
+ * display absolute velocity of chassis
+ */
 void odometer() {
   /*Set the values*/
   lv_gauge_set_value(gauge1, 0, fabs(left_front.get_actual_velocity()));
@@ -258,6 +280,9 @@ void odometer() {
   lv_gauge_set_value(gauge1, 3, fabs(right_back.get_actual_velocity()));
 }
 
+/**
+ * create odometer
+ */
 void lv_ex_gauge_1(void)
 {
     /*Create a style*/
@@ -287,16 +312,19 @@ void lv_ex_gauge_1(void)
     lv_gauge_set_critical_value(gauge1, 160);
     lv_gauge_set_needle_count(gauge1, 4, needle_colors);
     lv_obj_set_size(gauge1, 150, 150);
-    lv_obj_align(gauge1, NULL, LV_ALIGN_CENTER, 0, 20);
+    lv_obj_align(gauge1, NULL, LV_ALIGN_IN_RIGHT_MID, -20, 20);
 
-    /*Set the values*/
-    lv_gauge_set_value(gauge1, 0, 10);
-    lv_gauge_set_value(gauge1, 1, 20);
-    lv_gauge_set_value(gauge1, 2, 130);
-    lv_gauge_set_value(gauge1, 3, 150);
+    /*Set the values to random number of 0 - 200 */
+    lv_gauge_set_value(gauge1, 0, rand() % 200);
+    lv_gauge_set_value(gauge1, 1, rand() % 200);
+    lv_gauge_set_value(gauge1, 2, rand() % 200);
+    lv_gauge_set_value(gauge1, 3, rand() % 200);
 }
 
 
+/**
+ * create tab view as main GUI
+ */
 void lv_ex_tabview_1(void)
 {
   // lvgl theme
@@ -312,38 +340,26 @@ void lv_ex_tabview_1(void)
 
   /*Add 4 tabs (the tabs are page (lv_page) and can be scrolled*/
   tab1 = lv_tabview_add_tab(tabview, "Select");
-  tab2 = lv_tabview_add_tab(tabview, "Auto");
+  tab2 = lv_tabview_add_tab(tabview, "Auton");
   tab3 = lv_tabview_add_tab(tabview, "Driver");
   tab4 = lv_tabview_add_tab(tabview, "PID");
   tab5 = lv_tabview_add_tab(tabview, "Odometer");
 
   lv_tabview_set_tab_act(tabview, 0 , LV_ANIM_OFF);
 
-
-
-
-  /*Add content to the tabs*/
-  //label = lv_label_create(tab1, NULL);
-  //lv_label_set_text(label, "select your autonomous");
-  //lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
-
-
-
-
-  debuglabel = lv_label_create(tab2, NULL);
-  lv_label_set_text(debuglabel, "auto debug");
+  debugauto = lv_label_create(tab2, NULL);
+  lv_label_set_text(debugauto, "auto sensors and motors");
   debugpid = lv_label_create(tab2, NULL);
-  lv_obj_align(debugpid, debuglabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 80);
+  lv_obj_align(debugpid, debugauto, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 80);
+  lv_label_set_text(debugpid, "debug PID");
 
-  debugtxt = lv_label_create(tab3, NULL);
-
-  lv_label_set_long_mode(debugtxt, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
-  lv_label_set_recolor(debugtxt, true);                      /*Enable re-coloring by commands in the text*/
-  lv_label_set_align(debugtxt, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
-  lv_label_set_text(debugtxt, NULL);
-  lv_obj_set_width(debugtxt, 500);                           /*Set a width*/
-  lv_obj_align(debugtxt, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 20);      /*Align to center*/
-
+  debugdrive = lv_label_create(tab3,NULL);
+  lv_label_set_long_mode(debugdrive, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
+  lv_label_set_recolor(debugdrive, true);                      /*Enable re-coloring by commands in the text*/
+  lv_label_set_align(debugdrive, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
+  lv_label_set_text(debugdrive, "driver sensors and motors");
+  lv_obj_set_width(debugdrive, 500);                           /*Set a width*/
+  lv_obj_align(debugdrive, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 20);      /*Align to center*/
 
   pid_label = lv_label_create(tab4, NULL);
   lv_obj_set_style(pid_label, &lv_style_pretty_color);
@@ -376,10 +392,10 @@ void lv_ex_tabview_1(void)
  */
 void initialize()
 {
- pros::delay(100);
- pros::delay(20);
-	        lv_ex_tabview_1();
-          pros::delay(20);
+  pros::delay(100);
+  pros::delay(20);
+  lv_ex_tabview_1(); 
+  pros::delay(20);
 }
 
 /**

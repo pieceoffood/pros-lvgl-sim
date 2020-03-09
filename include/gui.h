@@ -9,7 +9,7 @@ extern float kI;
 extern float kD;
 
 extern lv_obj_t * tabview;
-extern lv_obj_t * debugtxt;
+extern lv_obj_t * debugdrive;
 extern lv_obj_t * debugpid;
 
 static lv_obj_t * tab1;
@@ -19,7 +19,7 @@ static lv_obj_t * tab4;
 static lv_obj_t * tab5;
 static lv_obj_t * gauge1;
 static lv_obj_t * g_sb_label;  // sb text label
-extern lv_obj_t * debuglabel;
+extern lv_obj_t * debugauto;
 static lv_obj_t * pid_label;
 
 static lv_obj_t *g_btn_region; //tab view region of the screen
