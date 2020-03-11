@@ -2,7 +2,7 @@
 
 #include "main.h"
 #include "motor.hpp"
-
+#include "gui.h"
 
 #if USE_PROS_LVGL_SIM == 1
 #include "ncrapi_lvgl_sim_kernel/src/ncrLvglSimKernel.hpp"
@@ -14,7 +14,7 @@
 
 
 
-#include "gui.h"
+
 #include "main.h"
 #include <stdio.h>
 #include <stdarg.h>

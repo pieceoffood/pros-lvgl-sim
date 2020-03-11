@@ -346,7 +346,6 @@ void lv_ex_tabview_1(void)
   lv_tabview_set_sliding(tabview, false);
 
   /*Add 4 tabs (the tabs are page (lv_page) and can be scrolled*/
-<<<<<<< HEAD
 		tab1 = lv_tabview_add_tab(tabview, "Select");
     tab2 = lv_tabview_add_tab(tabview, "debug");
     tab3 = lv_tabview_add_tab(tabview, "PID debug");
@@ -364,41 +363,6 @@ void lv_ex_tabview_1(void)
     debugpid = lv_label_create(tab3, NULL);
     lv_label_set_text(debugpid, "PID debug");
     lv_obj_align(debugpid, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 0);
-=======
-  tab1 = lv_tabview_add_tab(tabview, "Select");
-  tab2 = lv_tabview_add_tab(tabview, "Debug");
-  tab3 = lv_tabview_add_tab(tabview, "PID Debug");
-  tab4 = lv_tabview_add_tab(tabview, "PID");
-  tab5 = lv_tabview_add_tab(tabview, "Odometer");
-
-  lv_tabview_set_tab_act(tabview, 0 , LV_ANIM_OFF);
-
-  debugauto = lv_label_create(tab2, NULL);
-  lv_label_set_long_mode(debugauto, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
-  lv_label_set_recolor(debugauto, true);                      /*Enable re-coloring by commands in the text*/
-  lv_label_set_align(debugauto, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
-  lv_label_set_text(debugauto, "auto sensors and motors");
-  lv_obj_set_width(debugauto, 500);                           /*Set a width*/
-  lv_obj_align(debugauto, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 0);      /*Align to center*/
-  
-
-  debugdrive = lv_label_create(tab3,NULL);
-  lv_label_set_long_mode(debugdrive, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
-  lv_label_set_recolor(debugdrive, true);                      /*Enable re-coloring by commands in the text*/
-  lv_label_set_align(debugdrive, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
-  lv_label_set_text(debugdrive, "driver sensors and motors");
-  lv_obj_set_width(debugdrive, 500);                           /*Set a width*/
-  lv_obj_align(debugdrive, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 0);      /*Align to center*/
-
-  debugpid = lv_label_create(tab3, NULL);
-  lv_obj_align(debugpid, debugdrive, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 80);
-  lv_label_set_text(debugpid, "debug PID");
-
-  pid_label = lv_label_create(tab4, NULL);
-  lv_obj_set_style(pid_label, &lv_style_pretty_color);
-  lv_label_set_text(pid_label, "PID tuning");
-  lv_obj_align(pid_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20);
->>>>>>> 9e4c7fcf50fc36a89f40a6172b79c8fc954a736e
 
   gui_btnm();
   pid_btnm();
