@@ -385,21 +385,40 @@ void lv_ex_sw_1(void)
     lv_obj_align(sw1, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
     lv_obj_set_event_cb(sw1, sw_event_handler);
 
+
+    static lv_style_t my_red_style;
+    lv_style_copy(&my_red_style, &knob_on_style);
+    my_red_style.body.main_color = LV_COLOR_RED;
+    my_red_style.body.shadow.color = LV_COLOR_RED;
+    my_red_style.body.grad_color = LV_COLOR_RED;
+    my_red_style.body.border.color = LV_COLOR_RED;
+    my_red_style.body.opa = 100;
+    my_red_style.text.color = LV_COLOR_RED;
+    my_red_style.body.padding.left = 0;
+    my_red_style.body.padding.right = 0;
+    my_red_style.body.padding.top = 0;
+    my_red_style.body.padding.bottom = 0;
+
+
     /*Copy the first switch and turn it ON*/
     lv_obj_t *sw2 = lv_sw_create(tab5, sw1);
     lv_obj_set_user_data(sw2,  (lv_obj_user_data_t) 82);
     lv_sw_on(sw2, LV_ANIM_ON);
     lv_obj_align(sw2, NULL, LV_ALIGN_CENTER, 0, 70);
+    lv_sw_set_style(sw2, LV_SW_STYLE_KNOB_ON, &my_red_style);
+    lv_sw_set_style(sw2, LV_SW_STYLE_INDIC, &my_red_style);
 
 
     lv_obj_t * swlabel1 = lv_label_create(sw1, NULL);
-    lv_label_set_align(swlabel1, LV_LABEL_ALIGN_CENTER); 
-    lv_label_set_text(swlabel1, "blue");
+    lv_label_set_align(swlabel1, LV_LABEL_ALIGN_CENTER);
+    lv_label_set_recolor(swlabel1, true); 
+    lv_label_set_text(swlabel1, "#0000ff Blue#");
     lv_obj_align(swlabel1, sw1, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
 
     lv_obj_t * swlabel2 = lv_label_create(sw2, NULL);
     lv_label_set_align(swlabel2, LV_LABEL_ALIGN_CENTER); 
-    lv_label_set_text(swlabel2, "red");
+    lv_label_set_recolor(swlabel2, true); 
+    lv_label_set_text(swlabel2, "#ff0000 Red#");
     lv_obj_align(swlabel2, sw2, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
     
 
