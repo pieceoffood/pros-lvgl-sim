@@ -330,6 +330,82 @@ void lv_ex_gauge_1(void)
 
 
 /**
+ * call back function for switch
+ */
+static void sw_event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_VALUE_CHANGED) {
+        printf("SW %d State: %s\n", (int ) lv_obj_get_user_data(obj) ,lv_sw_get_state(obj) ? "On" : "Off");
+    }
+}
+
+/**
+ * add two switchs
+ */
+void lv_ex_sw_1(void)
+{
+    /*Create styles for the switch*/
+    static lv_style_t bg_style;
+    static lv_style_t indic_style;
+    static lv_style_t knob_on_style;
+    static lv_style_t knob_off_style;
+
+    lv_style_copy(&bg_style, &lv_style_pretty);
+    bg_style.body.radius = LV_RADIUS_CIRCLE;
+    bg_style.body.padding.top = 3;
+    bg_style.body.padding.bottom = 3;
+
+    lv_style_copy(&indic_style, &lv_style_pretty_color);
+    indic_style.body.radius = LV_RADIUS_CIRCLE;
+    indic_style.body.main_color = lv_color_hex(0x9fc8ef);
+    indic_style.body.grad_color = lv_color_hex(0x9fc8ef);
+    indic_style.body.padding.left = 0;
+    indic_style.body.padding.right = 0;
+    indic_style.body.padding.top = 0;
+    indic_style.body.padding.bottom = 0;
+
+    lv_style_copy(&knob_off_style, &lv_style_pretty);
+    knob_off_style.body.radius = LV_RADIUS_CIRCLE;
+    knob_off_style.body.shadow.width = 2;
+    knob_off_style.body.shadow.type = LV_SHADOW_BOTTOM;
+
+    lv_style_copy(&knob_on_style, &lv_style_pretty_color);
+    knob_on_style.body.radius = LV_RADIUS_CIRCLE;
+    knob_on_style.body.shadow.width = 4;
+    knob_on_style.body.shadow.type = LV_SHADOW_BOTTOM;
+
+    /*Create a switch and apply the styles*/
+    lv_obj_t *sw1 = lv_sw_create(tab5, NULL);
+    lv_obj_set_user_data(sw1,  (lv_obj_user_data_t) 81);
+    lv_obj_set_size(sw1,60,20);
+    lv_sw_set_style(sw1, LV_SW_STYLE_BG, &bg_style);
+    lv_sw_set_style(sw1, LV_SW_STYLE_INDIC, &indic_style);
+    lv_sw_set_style(sw1, LV_SW_STYLE_KNOB_ON, &knob_on_style);
+    lv_sw_set_style(sw1, LV_SW_STYLE_KNOB_OFF, &knob_off_style);
+    lv_obj_align(sw1, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
+    lv_obj_set_event_cb(sw1, sw_event_handler);
+
+    /*Copy the first switch and turn it ON*/
+    lv_obj_t *sw2 = lv_sw_create(tab5, sw1);
+    lv_obj_set_user_data(sw2,  (lv_obj_user_data_t) 82);
+    lv_sw_on(sw2, LV_ANIM_ON);
+    lv_obj_align(sw2, NULL, LV_ALIGN_CENTER, 0, 70);
+
+
+    lv_obj_t * swlabel1 = lv_label_create(sw1, NULL);
+    lv_label_set_align(swlabel1, LV_LABEL_ALIGN_CENTER); 
+    lv_label_set_text(swlabel1, "blue");
+    lv_obj_align(swlabel1, sw1, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+
+    lv_obj_t * swlabel2 = lv_label_create(sw2, NULL);
+    lv_label_set_align(swlabel2, LV_LABEL_ALIGN_CENTER); 
+    lv_label_set_text(swlabel2, "red");
+    lv_obj_align(swlabel2, sw2, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+    
+
+}
+
+/**
  * create tab view as main GUI
  */
 void lv_ex_tabview_1(void)
@@ -369,6 +445,7 @@ void lv_ex_tabview_1(void)
   gui_btn();
   DrawButton();
   lv_ex_gauge_1();
+  lv_ex_sw_1();
 
 }
 
