@@ -2,7 +2,7 @@
 
 #include "main.h"
 #include "motor.hpp"
-
+#include "gui.h"
 
 #if USE_PROS_LVGL_SIM == 1
 #include "ncrapi_lvgl_sim_kernel/src/ncrLvglSimKernel.hpp"
@@ -14,7 +14,7 @@
 
 
 
-#include "gui.h"
+
 #include "main.h"
 #include <stdio.h>
 #include <stdarg.h>
@@ -342,18 +342,21 @@ void lv_ex_tabview_1(void)
 
   /*Add 4 tabs (the tabs are page (lv_page) and can be scrolled*/
   tab1 = lv_tabview_add_tab(tabview, "Select");
-  tab2 = lv_tabview_add_tab(tabview, "Auton");
-  tab3 = lv_tabview_add_tab(tabview, "Driver");
+  tab2 = lv_tabview_add_tab(tabview, "Debug");
+  tab3 = lv_tabview_add_tab(tabview, "PID Debug");
   tab4 = lv_tabview_add_tab(tabview, "PID");
   tab5 = lv_tabview_add_tab(tabview, "Odometer");
 
   lv_tabview_set_tab_act(tabview, 0 , LV_ANIM_OFF);
 
   debugauto = lv_label_create(tab2, NULL);
+  lv_label_set_long_mode(debugauto, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
+  lv_label_set_recolor(debugauto, true);                      /*Enable re-coloring by commands in the text*/
+  lv_label_set_align(debugauto, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
   lv_label_set_text(debugauto, "auto sensors and motors");
-  debugpid = lv_label_create(tab2, NULL);
-  lv_obj_align(debugpid, debugauto, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 80);
-  lv_label_set_text(debugpid, "debug PID");
+  lv_obj_set_width(debugauto, 500);                           /*Set a width*/
+  lv_obj_align(debugauto, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 0);      /*Align to center*/
+  
 
   debugdrive = lv_label_create(tab3,NULL);
   lv_label_set_long_mode(debugdrive, LV_LABEL_LONG_BREAK);     /*Break the long lines*/
@@ -361,7 +364,11 @@ void lv_ex_tabview_1(void)
   lv_label_set_align(debugdrive, LV_LABEL_ALIGN_LEFT);       /*Center aligned lines*/
   lv_label_set_text(debugdrive, "driver sensors and motors");
   lv_obj_set_width(debugdrive, 500);                           /*Set a width*/
-  lv_obj_align(debugdrive, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 20);      /*Align to center*/
+  lv_obj_align(debugdrive, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 0);      /*Align to center*/
+
+  debugpid = lv_label_create(tab3, NULL);
+  lv_obj_align(debugpid, debugdrive, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 80);
+  lv_label_set_text(debugpid, "debug PID");
 
   pid_label = lv_label_create(tab4, NULL);
   lv_obj_set_style(pid_label, &lv_style_pretty_color);
