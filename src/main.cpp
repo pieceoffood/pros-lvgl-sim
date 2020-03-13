@@ -84,14 +84,25 @@ void gui_btn(void) {
  */
 static void btnm_action(lv_obj_t * btnm, lv_event_t event) {
   const char * btnmtxt ;
+  char charlab[100];
     
   int btnm_num=0;
   if(event == LV_EVENT_VALUE_CHANGED) {
     uint16_t id = lv_btnm_get_active_btn(btnm);    
-    btnmtxt = lv_btnm_get_active_btn_text(btnm);
+    btnmtxt = lv_btnm_get_active_btn_text(btnm) ;
+    // sprintf( *btnmtxt , "#ff000 %s #", lv_btnm_get_active_btn_text(btnm)) ;
+    if (id <=1) {
+      sprintf( charlab , "#ff0000 %s #", lv_btnm_get_active_btn_text(btnm)) ;
+    } else if (id ==2 | id ==3 ) {
+      sprintf( charlab , "#0000ff %s #", lv_btnm_get_active_btn_text(btnm)) ;
+    } else {
+      sprintf( charlab , " %s ", lv_btnm_get_active_btn_text(btnm)) ;
+    }
+
+    
     btnm_num = lv_btnm_get_active_btn(btnm)+1;
     lv_btnm_clear_btn_ctrl_all(btnm,LV_BTNM_CTRL_TGL_STATE); // void the second click. btn will still be toggoled
-    lv_label_set_text(g_sb_label, btnmtxt);
+    lv_label_set_text(g_sb_label, charlab);
     auton_sel = btnm_num;
     printf("%s was pressed button num %d\n", btnmtxt, btnm_num);
   }
@@ -115,6 +126,7 @@ void gui_btnm(void) {
   lv_btnm_set_one_toggle(btnm, true);
   lv_obj_set_event_cb(btnm, btnm_action);
   g_sb_label = lv_label_create(tab1, NULL);
+  lv_label_set_recolor(g_sb_label, true);
   lv_label_set_text(g_sb_label, "Please select Auton");
   lv_obj_align(g_sb_label, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -20); // must be after set_text
 }
